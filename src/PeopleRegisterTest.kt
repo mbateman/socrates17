@@ -1,3 +1,6 @@
+/**
+ * Created by michael on 17/06/2017.
+ */
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -65,30 +68,38 @@ Wally 28"""
 
 }
 
-
-
 class PeopleRegister(val people: List<Person>) {
 
-    fun count(): Int = TODO()
+    fun count(): Int = people.count()
 
-    fun oldestPerson(): Person? = TODO()
+    fun oldestPerson(): Person? = people.maxBy { it.age }
 
-    fun commonestName(): String? = TODO()
+    fun commonestName(): String? = people.groupingBy { it.name }.eachCount().maxBy { it.value }?.key
 
-    fun youngestCalled(sought: String): Int? = TODO()
+    fun youngestCalled(sought: String): Int? = people.filter { it.name == sought }.minBy { it.age }?.age
 
-    fun countOfChildren(): Int = TODO()
+    fun countOfChildren(): Int = people.filter{it.age < 18}.count()
 
-    fun adultToChildRatio(): Double {
-        TODO()
-    }
-    fun averageAge(): Double = TODO()
+    fun countOfAdults(): Int = people.filter{it.age >= 18}.count()
+
+    fun adultToChildRatio(): Double = (countOfAdults() / countOfChildren()).toDouble()
+
+    fun averageAge(): Double = people.sumByDouble { it.age.toDouble() } / people.count()
 
     fun medianAge(): Double {
-        TODO()
+        val isEven = people.size % 2 == 0
+        val sorted: List<Person> = people.sortedBy { it.age }
+        if (isEven) {
+            val val1 = sorted.get((people.size / 2) - 1).age
+            val val2 = sorted.get((people.size / 2)).age
+            return (val1 + val2) / 2.0
+        } else {
+            return sorted.get(people.size / 2).age.toDouble()
+        }
     }
 
 }
+
 
 data class Person(val name: String, val age: Int)
 
